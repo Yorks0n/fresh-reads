@@ -1,0 +1,21 @@
+---
+import { loadArchive } from '../../lib/content.js';
+import { absoluteUrl, withBase } from '../../lib/site.js';
+import Base from '../../layouts/Base.astro';
+
+const archive = loadArchive();
+---
+<Base title="来源" canonicalPath="/sources/" description="按来源查看文章和订阅。">
+  <h1>来源</h1>
+  {archive.sources.length === 0 ? <p>还没有来源。</p> : (
+    <ul class="index">
+      {archive.sources.map((source) => (
+        <li>
+          <h2><a href={withBase(`/sources/${source.id}/`)}>{source.id}</a></h2>
+          <p class="meta">{source.items.length} 篇 · <a href={withBase(`/feeds/${source.id}.xml`)}>订阅此来源</a></p>
+          <p class="feed-url">{absoluteUrl(`/feeds/${source.id}.xml`)}</p>
+        </li>
+      ))}
+    </ul>
+  )}
+</Base>

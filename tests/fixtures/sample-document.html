@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>不要保留的文档标题</title>
+  <link rel="stylesheet" href="https://example.com/evil.css">
+  <style>body { color: BODY_COLOR_SECRET; }</style>
+  <script>alert("HEAD_SCRIPT_SECRET")</script>
+</head>
+<body>
+  <h1>【示例·虚构】导入的文档</h1>
+  <h2>导入后的小节</h2>
+  <p>这是<strong>粗体</strong>和<em>强调</em>。BODY_KEEP</p>
+  <ul><li>导入列表</li></ul>
+  <blockquote>导入引语</blockquote>
+  <p><a href="https://example.com/story">正常链接</a></p>
+  <p><a href="javascript:alert(1)" onclick="alert(1)">坏链接</a></p>
+  <p><img src="https://example.com/remote.png" alt="远程图"></p>
+  <p><img src="./local.png" alt="本地图"></p>
+  <iframe src="https://example.com/embed">IFRAME_SECRET</iframe>
+  <form action="https://example.com/login"><input name="token" value="SECRET"></form>
+</body>
+</html>

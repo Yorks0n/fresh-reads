@@ -1,0 +1,17 @@
+---
+import ItemList from '../components/ItemList.astro';
+import { groupByMonth, loadArchive } from '../lib/content.js';
+import Base from '../layouts/Base.astro';
+
+const archive = loadArchive();
+const groups = groupByMonth(archive.items);
+---
+<Base title="归档" canonicalPath="/archive/" description="按时间排列的全部文章。">
+  <h1>归档</h1>
+  {groups.length === 0 ? <p>还没有文章。</p> : groups.map((group) => (
+    <section>
+      <h2>{group.label}</h2>
+      <ItemList items={group.items} headingLevel={3} />
+    </section>
+  ))}
+</Base>

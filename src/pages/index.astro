@@ -1,0 +1,20 @@
+---
+import ItemList from '../components/ItemList.astro';
+import { loadArchive } from '../lib/content.js';
+import { absoluteUrl, HOME_LIMIT, SITE_DESCRIPTION, SITE_NAME, withBase } from '../lib/site.js';
+import Base from '../layouts/Base.astro';
+
+const archive = loadArchive();
+const recent = archive.items.slice(0, HOME_LIMIT);
+const truncated = archive.items.length > recent.length;
+---
+<Base canonicalPath="/" description={SITE_DESCRIPTION}>
+  <h1>{SITE_NAME}</h1>
+  <p class="lede">{SITE_DESCRIPTION}网页只保留统一的阅读版式。</p>
+  <p class="subscribe">
+    <a href={withBase('/feeds/all.xml')}>订阅全部全文（RSS）</a>
+    <span class="feed-url">{absoluteUrl('/feeds/all.xml')}</span>
+  </p>
+  {recent.length === 0 ? <p>还没有文章。</p> : <ItemList items={recent} />}
+  {truncated ? <p><a href={withBase('/archive/')}>更早的文章在归档</a></p> : null}
+</Base>

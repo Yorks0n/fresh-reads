@@ -1,0 +1,45 @@
+---
+import { formatDisplay } from '../../../lib/dates.js';
+import { loadArchive } from '../../../lib/content.js';
+import { withBase } from '../../../lib/site.js';
+import Base from '../../../layouts/Base.astro';
+
+export function getStaticPaths() {
+  const archive = loadArchive();
+  return archive.items.map((item) => ({
+    params: { source: item.source, slug: item.slug },
+    props: { item },
+  }));
+}
+
+const { item } = Astro.props;
+const sourceFeed = `/feeds/${item.source}.xml`;
+---
+<Base
+  title={item.title}
+  description={item.summary || item.title}
+  canonicalPath={item.path}
+  feeds={[
+    { path: sourceFeed, title: `订阅 ${item.source}` },
+    { path: '/feeds/all.xml', title: '订阅全部' },
+  ]}
+>
+  <article lang={item.lang || undefined}>
+    <header>
+      <p class="meta"><a href={withBase(`/sources/${item.source}/`)}>{item.source}</a></p>
+      <h1>{item.title}</h1>
+      <p class="meta">
+        <time datetime={item.published}>发布于 {formatDisplay(item.published)}</time>
+        {item.updated ? (
+          <> · <time datetime={item.updated}>修订于 {formatDisplay(item.updated)}</time></>
+        ) : null}
+      </p>
+      <p class="meta">
+        <a href={withBase(sourceFeed)}>订阅此来源</a>
+        {' · '}
+        <a href={withBase('/feeds/all.xml')}>订阅全部</a>
+      </p>
+    </header>
+    <div class="prose" set:html={item.html} />
+  </article>
+</Base>

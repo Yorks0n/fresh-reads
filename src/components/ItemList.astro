@@ -1,0 +1,20 @@
+---
+import { formatDisplay } from '../lib/dates.js';
+import { withBase } from '../lib/site.js';
+
+const { items, headingLevel = 2 } = Astro.props;
+const Heading = headingLevel === 3 ? 'h3' : 'h2';
+---
+<ul class="index">
+  {items.map((item) => (
+    <li>
+      <Heading><a href={withBase(item.path)}>{item.title}</a></Heading>
+      <p class="meta">
+        <a href={withBase(`/sources/${item.source}/`)}>{item.source}</a>
+        {' · '}
+        <time datetime={item.published}>{formatDisplay(item.published)}</time>
+      </p>
+      {item.summary ? <p>{item.summary}</p> : null}
+    </li>
+  ))}
+</ul>

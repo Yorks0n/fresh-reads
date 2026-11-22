@@ -1,0 +1,35 @@
+---
+import ItemList from '../../components/ItemList.astro';
+import { loadArchive } from '../../lib/content.js';
+import { absoluteUrl, SITE_NAME, withBase } from '../../lib/site.js';
+import Base from '../../layouts/Base.astro';
+
+export function getStaticPaths() {
+  const archive = loadArchive();
+  return archive.sources.map((source) => ({
+    params: { source: source.id },
+    props: { sourceId: source.id },
+  }));
+}
+
+const { sourceId } = Astro.props;
+const archive = loadArchive();
+const items = archive.items.filter((item) => item.source === sourceId);
+const feedPath = `/feeds/${sourceId}.xml`;
+---
+<Base
+  title={sourceId}
+  canonicalPath={`/sources/${sourceId}/`}
+  description={`${SITE_NAME} / ${sourceId}`}
+  feeds={[
+    { path: feedPath, title: `订阅 ${sourceId}` },
+    { path: '/feeds/all.xml', title: '订阅全部' },
+  ]}
+>
+  <h1>{sourceId}</h1>
+  <p class="subscribe">
+    <a href={withBase(feedPath)}>订阅此来源全文（RSS）</a>
+    <span class="feed-url">{absoluteUrl(feedPath)}</span>
+  </p>
+  {items.length === 0 ? <p>这个来源还没有文章。</p> : <ItemList items={items} />}
+</Base>
