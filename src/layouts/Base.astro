@@ -1,0 +1,45 @@
+---
+import '../styles/site.css';
+import { absoluteUrl, SITE_NAME, withBase } from '../lib/site.js';
+
+const {
+  title = '',
+  description = '',
+  canonicalPath = null,
+  feeds = [{ path: '/feeds/all.xml', title: '订阅全部' }],
+} = Astro.props;
+const pageTitle = title ? `${title} · ${SITE_NAME}` : SITE_NAME;
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    {description ? <meta name="description" content={description} /> : null}
+    {canonicalPath ? <link rel="canonical" href={absoluteUrl(canonicalPath)} /> : null}
+    {feeds.map((feed) => (
+      <link rel="alternate" type="application/rss+xml" title={feed.title} href={absoluteUrl(feed.path)} />
+    ))}
+  </head>
+  <body>
+    <a class="skip" href="#content">跳到正文</a>
+    <div class="wrap">
+      <header class="site">
+        <p class="brand"><a href={withBase('/')}>{SITE_NAME}</a></p>
+        <nav aria-label="站点">
+          <a href={withBase('/')}>首页</a>
+          <a href={withBase('/archive/')}>归档</a>
+          <a href={withBase('/sources/')}>来源</a>
+          <a href={withBase('/feeds/all.xml')}>订阅全部</a>
+        </nav>
+      </header>
+      <main id="content">
+        <slot />
+      </main>
+      <footer class="site">
+        <p><a href="https://github.com/Yorks0n/fresh-reads">源码与投稿说明</a></p>
+      </footer>
+    </div>
+  </body>
+</html>
